@@ -1,7 +1,8 @@
 project(game)
 
 add_executable(${PROJECT_NAME}.elf
-        src/main.cpp)
+        src/main.cpp
+        src/HomeScreenScene.h src/HomeScreenScene.cpp src/sprites/chicken.h src/sprites/sharedPalette.h src/backgrounds/homeScreen.h)
 
 target_link_libraries(${PROJECT_NAME}.elf gba-sprite-engine)
 
