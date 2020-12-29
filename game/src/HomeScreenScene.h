@@ -15,7 +15,7 @@ private:
     std::unique_ptr<Background> bgHomeScreen;
 
     ////Object declaration sprites on the homeScreenScene
-    std::unique_ptr<Sprite> chicken;
+    std::unique_ptr<Sprite> bird;
 public:
     ////Constructor
     std::vector<Sprite *> sprites() override;
