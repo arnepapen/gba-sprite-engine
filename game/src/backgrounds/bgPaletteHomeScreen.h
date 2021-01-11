@@ -1,11 +1,11 @@
 //
-// Created by Arne Papen on 28/12/2020.
+// Created by Arne Papen on 11/01/2021.
 //
 
-#ifndef GBA_SPRITE_ENGINE_PROJECT_SHAREDBGPALETTE_H
-#define GBA_SPRITE_ENGINE_PROJECT_SHAREDBGPALETTE_H
+#ifndef GBA_SPRITE_ENGINE_PROJECT_BGPALETTEHOMESCREEN_H
+#define GBA_SPRITE_ENGINE_PROJECT_BGPALETTEHOMESCREEN_H
 
-const unsigned short sharedBgPalette[256] __attribute__((aligned(4)))=
+const unsigned short bgPaletteHomeScreen[256] __attribute__((aligned(4)))=
         {
                 0x0000,0x6660,0x46EC,0x6796,0x7FFF,0x6B53,0x476F,0x67DB,
                 0x4770,0x4790,0x470C,0x4B0E,0x470D,0x472D,0x0000,0x0000,
@@ -44,5 +44,4 @@ const unsigned short sharedBgPalette[256] __attribute__((aligned(4)))=
                 0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
         };
 
-
-#endif //GBA_SPRITE_ENGINE_PROJECT_SHAREDBGPALETTE_H
+#endif //GBA_SPRITE_ENGINE_PROJECT_BGPALETTEHOMESCREEN_H

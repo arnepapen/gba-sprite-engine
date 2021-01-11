@@ -25,6 +25,7 @@ private:
     int timer2;
     int birdX, birdY;
     bool firstJump = false;
+    int score, highscore;
 public:
     //Constructor
     std::vector<Sprite *> sprites() override;
@@ -36,6 +37,9 @@ public:
     //Default
     void load() override;
     void tick(u16 keys) override;
+
+    //Game related methods
+    void gameOver();
 };
 
 #endif //GBA_SPRITE_ENGINE_PROJECT_GAMESCREENSCENE_H

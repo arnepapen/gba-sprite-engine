@@ -1,21 +1,21 @@
 
-//{{BLOCK(background240x160v4)
+//{{BLOCK(Background_240x160_V4)
 
 //======================================================================
 //
-//	background240x160v4, 256x256@8, 
+//	Background_240x160_V4, 256x256@8, 
 //	+ palette 256 entries, not compressed
 //	+ 137 tiles (t|f|p reduced) not compressed
 //	+ regular map (in SBBs), not compressed, 32x32 
 //	Total size: 512 + 8768 + 2048 = 11328
 //
-//	Time-stamp: 2021-01-01, 16:48:37
+//	Time-stamp: 2021-01-11, 23:09:54
 //	Exported by Cearn's GBA Image Transmogrifier, v0.8.6
 //	( http://www.coranac.com/projects/#grit )
 //
 //======================================================================
 
-const unsigned int background240x160v4Tiles[2192] __attribute__((aligned(4)))=
+const unsigned int Background_240x160_V4Tiles[2192] __attribute__((aligned(4)))=
 {
 	0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,
 	0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,
@@ -327,7 +327,7 @@ const unsigned int background240x160v4Tiles[2192] __attribute__((aligned(4)))=
 	0x09090909,0x09090909,0x09090909,0x09090909,0x09090909,0x09090909,0x09090909,0x09090909,
 };
 
-const unsigned short background240x160v4Map[1024] __attribute__((aligned(4)))=
+const unsigned short Background_240x160_V4Map[1024] __attribute__((aligned(4)))=
 {
 	0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,
 	0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,0x0001,
@@ -474,7 +474,7 @@ const unsigned short background240x160v4Map[1024] __attribute__((aligned(4)))=
 	0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
 };
 
-const unsigned short background240x160v4Pal[256] __attribute__((aligned(4)))=
+const unsigned short Background_240x160_V4Pal[256] __attribute__((aligned(4)))=
 {
 	0x0000,0x6660,0x46EC,0x6796,0x7FFF,0x6B53,0x476F,0x67DB,
 	0x4770,0x4790,0x470C,0x4B0E,0x470D,0x472D,0x0000,0x0000,
@@ -513,4 +513,4 @@ const unsigned short background240x160v4Pal[256] __attribute__((aligned(4)))=
 	0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,0x0000,
 };
 
-//}}BLOCK(background240x160v4)
+//}}BLOCK(Background_240x160_V4)

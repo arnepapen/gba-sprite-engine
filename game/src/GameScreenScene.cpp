@@ -12,12 +12,13 @@
 #include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
 #include <string>
+#include <sstream>
 
 #include "GameScreenScene.h"
 #include "sprites/bird.h"
 #include "sprites/sharedPalette.h"
 #include "backgrounds/gameScreen.h"
-#include "backgrounds/sharedBgPalette.h"
+#include "backgrounds/bgPaletteGameScreen.h"
 
 //Getters voor de background
 std::vector<Background *> GameScreenScene::backgrounds() {
@@ -34,7 +35,7 @@ std::vector<Sprite *> GameScreenScene::sprites() {
     //Bird sprite into the vector
     sprites.push_back(bird.get());
 
-    //Pipes into the vector
+    //Tube sprite into the vector
 
     return sprites;
 }
@@ -43,7 +44,7 @@ std::vector<Sprite *> GameScreenScene::sprites() {
 void GameScreenScene::load() {
     //Set color palettes for Sprites and backgrounds
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(sharedPalette, sizeof(sharedPalette)));
-    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(sharedBgPalette, sizeof(sharedBgPalette)));
+    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(bgPaletteGameScreen, sizeof(bgPaletteGameScreen)));
 
     //Making sprites for GameScreenScene
     SpriteBuilder<AffineSprite> affineBuilder;
@@ -52,22 +53,28 @@ void GameScreenScene::load() {
             .withSize(SIZE_16_16)
             .withAnimated(4, 8)
             .withLocation(107,60)
+            .withinBounds()
             .buildPtr();
 
     //Making background for GameScreenScene (screenblock 14 beste keuze)
     bgGameScreen = std::unique_ptr<Background>(new Background(1, background_data, sizeof(background_data), map, sizeof(map)));
     bgGameScreen.get()->useMapScreenBlock(14);
 
+    //Enabling textstreams
+    engine.get()->enableText();
+
     //Disable other backgrounds to prevent glitching parts
     REG_DISPCNT = DCNT_MODE0 | DCNT_OBJ | DCNT_OBJ_1D | DCNT_BG0 | DCNT_BG1;
-
 }
 
 //do ... every tick (each engine)
 void GameScreenScene::tick(u16 keys) {
-    timer++;
+    //TEXT FOR DEBUGGING ONLY
+    //TextStream::instance().setText(std::to_string(birdY), 4, 0);
+
 
     //Reduce background scrolling speed by 2 and reset self made timer
+    timer++;
     if(timer >= 2){
         scrollX += 1;
         bgGameScreen.get()->scroll(scrollX, scrollY);
@@ -75,51 +82,55 @@ void GameScreenScene::tick(u16 keys) {
     }
 
 
-//    //Pressing A, B or arrow up let's the bird jump only ONCE, otherwise 'gravity' will pull down the bird
-//    if((keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == false){
-//        for (int v = -20; v < 0 ; v++) {
-//            bird->setVelocity(0,-6);
-//        }
-//        bird.get()->rotate(8000);
-//        holdJumpBtn = true;
-//    }
-//    //If jump buttons are not active, reset the holdJumpBtn indicator
-//    else if(!(keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == true){
-//        holdJumpBtn = false;
-//    }
-//    //If you didn't jump or hold the button, the bird will taken down by 'gravity'
-//    else {
-//        timer2++;
-//        if (timer2 >= 4) {
-//            bird->setVelocity(0,+1);
-//            bird.get()->rotate(-8000);
-//            timer2 = 0;
-//        }
-//    }
-
-
     //Pressing A, B or arrow up let's the bird jump only ONCE, otherwise 'gravity' will pull down the bird
-    if((keys & KEY_UP || keys & KEY_A || keys & KEY_B)){
-        //Setting velocity upwards
-        bird.get()->rotate(8000);
-
-        //Start timer
+    if((keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == false){
+        //(Re)start timer
         engine->getTimer()->reset();
         engine->getTimer()->start();
 
         //Let tha game begin
         firstJump = true;
+        holdJumpBtn = true;
     }
-    else {
+    else if (!(keys & KEY_UP || keys & KEY_A || keys & KEY_B)){
+        holdJumpBtn = false;
+    }
 
+    //Depending of the acceleration in the Y position, rotating the bird a bit
+    //Bird muzzle straight ahead
+    if(birdY >= -1 && birdY <= 0){
+        bird.get()->rotate(0);
     }
+    //Rotate bird with muzzle upwards
+    else if(birdY < 0){
+        bird.get()->rotate(8000);
+    }
+    //Rotate bird with muzzle the most downwards
+    else if(birdY > 2){
+        bird.get()->rotate(-10000);
+    }
+    //Rotate bird with muzzle more upwards
+    else if(birdY > 0 && birdY < 2){
+        bird.get()->rotate(-6000);
+    }
+
 
 
     //The first jump let the game begin
     if(firstJump == true) {
         //'Gravity' is created by a certain Y velocity upwards that is slowed down by a factor of the time that the jump key is pressed
-        //This will first slow down the bird, next the bird moves downwards with a speed according to the time elapsed after jump
+        //This will first slow down the bird, next the bird moves with a rising speed downwards according to the time elapsed after jump
         birdY = -2 + (engine->getTimer()->getTotalMsecs() / 110);
         bird->setVelocity(0,birdY);
     }
+
+
+    //Print text in the upper left corner with the current score and highscore
+    TextStream::instance().setText("Highscore:" + std::to_string(highscore), 0, 0);
+    TextStream::instance().setText("Score:" + std::to_string(score), 1, 0);
+}
+
+//Once the bird collides with a pipe or the ground the game over method will execute
+void GameScreenScene::gameOver() {
+
 }

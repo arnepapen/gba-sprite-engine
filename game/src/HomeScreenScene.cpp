@@ -13,7 +13,7 @@
 #include "sprites/bird.h"
 #include "sprites/sharedPalette.h"
 #include "backgrounds/homeScreen.h"
-#include "backgrounds/sharedBgPalette.h"
+#include "backgrounds/bgPaletteHomeScreen.h"
 #include "GameScreenScene.h"
 
 //Getters voor de background
@@ -34,7 +34,7 @@ std::vector<Sprite *> HomeScreenScene::sprites() {
 void HomeScreenScene::load() {
     //Set color palettes for Sprites and backgrounds
     foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(sharedPalette, sizeof(sharedPalette)));
-    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(sharedBgPalette, sizeof(sharedBgPalette)));
+    backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(bgPaletteHomeScreen, sizeof(bgPaletteHomeScreen)));
 
     //Making sprites for HomeScreenScene
     SpriteBuilder<Sprite> builder;
