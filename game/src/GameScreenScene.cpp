@@ -5,6 +5,7 @@
 
 
 #include <vector>
+#include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
 #include <libgba-sprite-engine/background/text_stream.h>
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
@@ -26,9 +27,15 @@ std::vector<Background *> GameScreenScene::backgrounds() {
 
 //Getters voor de sprites
 std::vector<Sprite *> GameScreenScene::sprites() {
-    return {
-            bird.get()
-    };
+    //Vector with all sprites inside
+    std::vector<Sprite*> sprites;
+
+    //Bird sprite into the vector
+    sprites.push_back(bird.get());
+
+    //Pipes into the vector
+
+    return sprites;
 }
 
 //Loading GameScreenScene
@@ -38,8 +45,8 @@ void GameScreenScene::load() {
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(sharedBgPalette, sizeof(sharedBgPalette)));
 
     //Making sprites for GameScreenScene
-    SpriteBuilder<Sprite> builder;
-    bird = builder
+    SpriteBuilder<AffineSprite> affineBuilder;
+    bird = affineBuilder
             .withData(birdTiles, sizeof(birdTiles))
             .withSize(SIZE_16_16)
             .withAnimated(4, 8)
@@ -57,6 +64,36 @@ void GameScreenScene::load() {
 
 //do ... every tick (each engine)
 void GameScreenScene::tick(u16 keys) {
-    scrollX += 1;
-    bgGameScreen.get()->scroll(scrollX, scrollY);
+    timer++;
+
+    //Reduce background scrolling speed by 2 and reset timer
+    if(timer >= 2){
+        scrollX += 1;
+        bgGameScreen.get()->scroll(scrollX, scrollY);
+        timer = 0;
+    }
+
+
+    //Pressing A, B or arrow up let's the bird jump only ONCE, otherwise 'gravity' will pull down the bird
+    if((keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == false){
+        for (int v = -20; v < 0 ; v++) {
+            bird->setVelocity(0,-6);
+        }
+        bird.get()->rotate(8000);
+        holdJumpBtn = true;
+    }
+    //If jump buttons are not active, reset the holdJumpBtn indicator
+    else if(!(keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == true){
+        holdJumpBtn = false;
+    }
+    //If you didn't jump or hold the button, the bird will taken down by 'gravity'
+    else {
+        timer2++;
+        if (timer2 >= 4) {
+            bird->setVelocity(0,+1);
+            bird.get()->rotate(-8000);
+            timer2 = 0;
+        }
+    }
+
 }
