@@ -23,6 +23,8 @@ private:
     int timer;
     bool holdJumpBtn;
     int timer2;
+    int birdX, birdY;
+    bool firstJump = false;
 public:
     //Constructor
     std::vector<Sprite *> sprites() override;

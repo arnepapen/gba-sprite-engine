@@ -11,6 +11,7 @@
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
 #include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
+#include <string>
 
 #include "GameScreenScene.h"
 #include "sprites/bird.h"
@@ -66,7 +67,7 @@ void GameScreenScene::load() {
 void GameScreenScene::tick(u16 keys) {
     timer++;
 
-    //Reduce background scrolling speed by 2 and reset timer
+    //Reduce background scrolling speed by 2 and reset self made timer
     if(timer >= 2){
         scrollX += 1;
         bgGameScreen.get()->scroll(scrollX, scrollY);
@@ -74,26 +75,51 @@ void GameScreenScene::tick(u16 keys) {
     }
 
 
+//    //Pressing A, B or arrow up let's the bird jump only ONCE, otherwise 'gravity' will pull down the bird
+//    if((keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == false){
+//        for (int v = -20; v < 0 ; v++) {
+//            bird->setVelocity(0,-6);
+//        }
+//        bird.get()->rotate(8000);
+//        holdJumpBtn = true;
+//    }
+//    //If jump buttons are not active, reset the holdJumpBtn indicator
+//    else if(!(keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == true){
+//        holdJumpBtn = false;
+//    }
+//    //If you didn't jump or hold the button, the bird will taken down by 'gravity'
+//    else {
+//        timer2++;
+//        if (timer2 >= 4) {
+//            bird->setVelocity(0,+1);
+//            bird.get()->rotate(-8000);
+//            timer2 = 0;
+//        }
+//    }
+
+
     //Pressing A, B or arrow up let's the bird jump only ONCE, otherwise 'gravity' will pull down the bird
-    if((keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == false){
-        for (int v = -20; v < 0 ; v++) {
-            bird->setVelocity(0,-6);
-        }
+    if((keys & KEY_UP || keys & KEY_A || keys & KEY_B)){
+        //Setting velocity upwards
         bird.get()->rotate(8000);
-        holdJumpBtn = true;
+
+        //Start timer
+        engine->getTimer()->reset();
+        engine->getTimer()->start();
+
+        //Let tha game begin
+        firstJump = true;
     }
-    //If jump buttons are not active, reset the holdJumpBtn indicator
-    else if(!(keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == true){
-        holdJumpBtn = false;
-    }
-    //If you didn't jump or hold the button, the bird will taken down by 'gravity'
     else {
-        timer2++;
-        if (timer2 >= 4) {
-            bird->setVelocity(0,+1);
-            bird.get()->rotate(-8000);
-            timer2 = 0;
-        }
+
     }
 
+
+    //The first jump let the game begin
+    if(firstJump == true) {
+        //'Gravity' is created by a certain Y velocity upwards that is slowed down by a factor of the time that the jump key is pressed
+        //This will first slow down the bird, next the bird moves downwards with a speed according to the time elapsed after jump
+        birdY = -2 + (engine->getTimer()->getTotalMsecs() / 110);
+        bird->setVelocity(0,birdY);
+    }
 }
