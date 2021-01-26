@@ -18,11 +18,10 @@ private:
     std::unique_ptr<Sprite> bird;
 public:
     ////Constructor
-    std::vector<Sprite *> sprites() override;
-    std::vector<Background *> backgrounds() override;
-
     ////Making scene for the home screen
     HomeScreenScene(std::shared_ptr<GBAEngine> engine) : Scene(engine) {}
+    std::vector<Sprite *> sprites() override;
+    std::vector<Background *> backgrounds() override;
 
     ////Default
     void load() override;

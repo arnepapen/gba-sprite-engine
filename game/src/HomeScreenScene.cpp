@@ -16,14 +16,14 @@
 #include "backgrounds/bgPaletteHomeScreen.h"
 #include "GameScreenScene.h"
 
-//Getters voor de background
+//Getters background
 std::vector<Background *> HomeScreenScene::backgrounds() {
     return {
         bgHomeScreen.get()
     };
 }
 
-//Getters voor de sprites
+//Getters sprites
 std::vector<Sprite *> HomeScreenScene::sprites() {
     return {
         bird.get()

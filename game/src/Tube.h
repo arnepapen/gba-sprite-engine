@@ -39,10 +39,10 @@ public:
     Sprite* getTubeExtTopSprite() {return tubeExtTopSprite.get();}
     Sprite* getTubeCapBotSprite() {return tubeCapBotSprite.get();}
     Sprite* getTubeExtBotSprite() {return tubeExtBotSprite.get();}
+    int getX() {return xPos;}
     void tick();
     void randomHeightTube();
     bool isOffScreen() {return tubeCapBotSprite->isOffScreen();}
-    //void setPosition(int x, int yPosC, int yPosE);
 };
 
 #endif //GBA_SPRITE_ENGINE_PROJECT_TUBE_H

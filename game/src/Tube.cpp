@@ -6,11 +6,6 @@
 #include <libgba-sprite-engine/gba_engine.h>
 #include <stdlib.h>
 
-//void Tube::setPosition(int x, int yPosC, int yPE) {
-//    xPos = x;
-//    yPosCap = yPosC;
-//    yPosExtension = yPE;
-//}
 
 void Tube::randomHeightTube() {
     //Generate random Y coordinates for the middle of the tube
@@ -21,9 +16,6 @@ void Tube::randomHeightTube() {
     yPosCapTop = centerTubesY - 32 - (marginBetweenTubesY / 2);
     yPosExtTop = yPosCapTop - 64;
 
-    //Flip the top sprites
-    tubeCapTopSprite->flipVertically(true);
-    tubeExtTopSprite->flipVertically(true);
     onceExecuted = true;
 }
 
@@ -39,4 +31,8 @@ void Tube::tick() {
     tubeExtBotSprite->moveTo(xPos, yPosExtBot);
 
     xPos -= 1;
+
+    //Flip the top sprites
+    tubeCapTopSprite->flipVertically(true);
+    tubeExtTopSprite->flipVertically(true);
 }

@@ -17,7 +17,7 @@
 
 #include "GameScreenScene.h"
 #include "sprites/birdSprite.h"
-#include "sprites/Tube.h"
+#include "sprites/tubeSprite.h"
 #include "sprites/sharedPalette.h"
 #include "backgrounds/gameScreen.h"
 #include "backgrounds/bgPaletteGameScreen.h"
@@ -128,31 +128,6 @@ void GameScreenScene::tick(u16 keys) {
     //TEXT FOR DEBUGGING ONLY
     //TextStream::instance().setText(std::to_string(birdY), 4, 0);
 
-    tubeSpawnTimer++;
-    if (tubeSpawnTimer == 125) {
-        //Calling end of screen detection
-        tubeEndOfScreenDetection();
-
-        //Creating tubes
-        tubes.push_back(createTube(272));
-        engine.get()->updateSpritesInScene();
-        tubeSpawnTimer = 0;
-    }
-
-    //Tube movements
-    for(auto &tube : tubes){
-        tube->tick();
-    }
-
-
-    //Reduce background scrolling speed by 2 and reset self made timer
-    timer++;
-    if(timer >= 2){
-        scrollX += 1;
-        bgGameScreen.get()->scroll(scrollX, scrollY);
-        timer = 0;
-    }
-
 
     //Pressing A, B or arrow up let's the bird jump only ONCE, otherwise 'gravity' will pull down the bird
     if((keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == false){
@@ -194,15 +169,38 @@ void GameScreenScene::tick(u16 keys) {
         //This will first slow down the bird, next the bird moves with a rising speed downwards according to the time elapsed after jump
         birdY = -2 + (engine->getTimer()->getTotalMsecs() / 110);
         bird->setVelocity(0,birdY);
+
+
+        //Reduce background scrolling speed by 2 and reset self made timer
+        timer++;
+        if(timer >= 2){
+            scrollX += 1;
+            bgGameScreen.get()->scroll(scrollX, scrollY);
+            timer = 0;
+        }
+
+        //Easy implemented method to spawn tubes at the same interval
+        tubeSpawnTimer++;
+        if (tubeSpawnTimer >= 125) {
+            //Calling end of screen detection
+            tubeEndOfScreenDetection();
+
+            //Creating tubes
+            tubes.push_back(createTube(272));
+            engine.get()->updateSpritesInScene();
+            tubeSpawnTimer = 0;
+        }
+
+        //Tube movements
+        for(auto &tube : tubes){
+            tube->tick();
+        }
     }
 
 
-    //Print text in the upper left corner with the current score and highscore
-    TextStream::instance().setText("Highscore:" + std::to_string(highscore), 0, 0);
-    TextStream::instance().setText("Score:" + std::to_string(score), 1, 0);
-
     //Other related methods
     collisionDetection();
+    scoreCounter();
 }
 
 //Removing off screen tubes from the sprite vector - Copied from demo3 FoodScene::removeBulletsOffScreen()
@@ -218,13 +216,30 @@ void GameScreenScene::collisionDetection() {
         if (bird->collidesWith(*tube->getTubeExtTopSprite()) ||
             bird->collidesWith(*tube->getTubeCapTopSprite()) ||
             bird->collidesWith(*tube->getTubeExtBotSprite()) ||
-            bird->collidesWith(*tube->getTubeCapBotSprite())) {
-
+            bird->collidesWith(*tube->getTubeCapBotSprite()) ||
+            bird->getY() >= GBA_SCREEN_HEIGHT - bird->getHeight()) {
+            gameOver();
         }
     }
 }
 
+//Responsible for the score
+void GameScreenScene::scoreCounter() {
+    for (auto& tube : tubes) {
+        if (bird->getX() == tube->getX()) {
+            score++;
+        }
+    }
+    if (score >= highScore) {
+        highScore = score;
+    }
+
+    //Print text in the upper left corner with the current score and highscore
+    TextStream::instance().setText("Highscore:" + std::to_string(highScore), 0, 0);
+    TextStream::instance().setText("Score:" + std::to_string(score), 1, 0);
+}
+
 //Once the bird collides with a pipe or the ground the game over method will execute
 void GameScreenScene::gameOver() {
-
+    //engine->transitionIntoScene(new EndScreenScene(engine), new FadeOutScene(3));
 }

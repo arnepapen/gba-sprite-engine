@@ -8,7 +8,7 @@ This Game Boy Advance game is based on an already created engine written in C++ 
 
 #### Project information
 
-The original widely known flappy bird game is back for the one and only Game Boy Advance! It's very simple, start the game with the start button and if you are ready to go, you can launch the bird with the "A" "B" or "ARROW_UP" buttons. Try to dodge the green tubes without falling on the ground, and maybe you could beat your own highscore. If you fail, you could try to make a revenge as much as you want.
+The original widely known flappy bird game is back for the one and only Game Boy Advance! It's very simple, start the game with the start button and if you are ready to go, you can launch the bird with the "A" "B" or "ARROW_UP" buttons. Try to dodge the green tubes without falling on the ground, and maybe you could beat your own highScore. If you fail, you could try to make a revenge as much as you want.
 
 Flappy Bird is not yet tested on the real GBA hardware, I have used the [mGBA](https://mgba.io/) emulator to test and debug during the design phase.  
 

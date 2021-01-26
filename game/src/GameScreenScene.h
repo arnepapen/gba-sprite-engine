@@ -38,7 +38,7 @@ private:
     int timer2;
     int tubeSpawnTimer = 0;
     int score = 0;
-    int highscore = 0;
+    int highScore;
 public:
     //Constructor
     GameScreenScene(std::shared_ptr<GBAEngine> engine) : Scene(engine) {}
@@ -53,6 +53,7 @@ public:
 
     //Game related methods
     std::unique_ptr<Tube> createTube(int xPos);
+    void scoreCounter();
     void tubeEndOfScreenDetection();
     void collisionDetection();
     void gameOver();
