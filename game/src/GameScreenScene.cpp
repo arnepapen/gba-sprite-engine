@@ -13,6 +13,7 @@
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 #include "GameScreenScene.h"
 #include "sprites/birdSprite.h"
@@ -27,11 +28,20 @@ std::unique_ptr<Tube> GameScreenScene::createTube(int xPos) {
             spriteBuilder
                 .withSize(SIZE_32_32)
                 .withLocation(xPos,0)
-                .buildWithDataOf(*aTubeCapSprite.get()),
+                .buildWithDataOf(*aTubeCapTopSprite.get()),
             spriteBuilder
                 .withSize(SIZE_32_64)
                 .withLocation(xPos,0)
-                .buildWithDataOf(*aTubeExtensionSprite.get())));
+                .buildWithDataOf(*aTubeExtTopSprite.get()),
+            spriteBuilder
+                .withSize(SIZE_32_32)
+                .withLocation(xPos,0)
+                .buildWithDataOf(*aTubeCapBotSprite.get()),
+            spriteBuilder
+                .withSize(SIZE_32_64)
+                .withLocation(xPos,0)
+                .buildWithDataOf(*aTubeExtBotSprite.get())
+                ));
 }
 
 //Getters voor de background
@@ -46,17 +56,21 @@ std::vector<Sprite *> GameScreenScene::sprites() {
     //Vector with all sprites inside
     std::vector<Sprite*> sprites;
 
-    //Bird sprite into the vector
-    sprites.push_back(bird.get());
-
     //More Tube sprites into the vector
     for (auto& tube : tubes) {
-        sprites.push_back((tube->getTubeCapSprite()));
-        sprites.push_back((tube->getTubeExtensionSprite()));
+        sprites.push_back((tube->getTubeCapTopSprite()));
+        sprites.push_back((tube->getTubeExtTopSprite()));
+        sprites.push_back((tube->getTubeCapBotSprite()));
+        sprites.push_back((tube->getTubeExtBotSprite()));
     }
 
-    sprites.push_back(aTubeCapSprite.get());
-    sprites.push_back(aTubeExtensionSprite.get());
+    sprites.push_back(aTubeCapTopSprite.get());
+    sprites.push_back(aTubeExtTopSprite.get());
+    sprites.push_back(aTubeCapBotSprite.get());
+    sprites.push_back(aTubeExtBotSprite.get());
+
+    //Bird sprite into the vector
+    sprites.push_back(bird.get());
     
     return sprites;
 }
@@ -68,18 +82,6 @@ void GameScreenScene::load() {
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(bgPaletteGameScreen, sizeof(bgPaletteGameScreen)));
 
     //Making sprites for GameScreenScene
-    aTubeCapSprite = spriteBuilder
-            .withData(tubeCapTiles, sizeof(tubeCapTiles))
-            .withSize(SIZE_32_32)
-            .withLocation(GBA_SCREEN_WIDTH + 30, GBA_SCREEN_HEIGHT + 30)
-            .buildPtr();
-
-    aTubeExtensionSprite = spriteBuilder
-            .withData(tubeExtensionTiles, sizeof(tubeExtensionTiles))
-            .withSize(SIZE_32_64)
-            .withLocation(GBA_SCREEN_WIDTH + 30, GBA_SCREEN_HEIGHT + 30)
-            .buildPtr();
-
     SpriteBuilder<AffineSprite> affineBuilder;
     bird = affineBuilder
             .withData(birdTiles, sizeof(birdTiles))
@@ -87,6 +89,27 @@ void GameScreenScene::load() {
             .withAnimated(4, 8)
             .withLocation(107,60)
             .withinBounds()
+            .buildPtr();
+
+    aTubeCapTopSprite = spriteBuilder
+            .withData(tubeCapTiles, sizeof(tubeCapTiles))
+            .withSize(SIZE_32_32)
+            .withLocation(GBA_SCREEN_WIDTH + 30, GBA_SCREEN_HEIGHT + 30)
+            .buildPtr();
+    aTubeExtTopSprite = spriteBuilder
+            .withData(tubeExtensionTiles, sizeof(tubeExtensionTiles))
+            .withSize(SIZE_32_64)
+            .withLocation(GBA_SCREEN_WIDTH + 30, GBA_SCREEN_HEIGHT + 30)
+            .buildPtr();
+    aTubeCapBotSprite = spriteBuilder
+            .withData(tubeCapTiles, sizeof(tubeCapTiles))
+            .withSize(SIZE_32_32)
+            .withLocation(GBA_SCREEN_WIDTH + 30, GBA_SCREEN_HEIGHT + 30)
+            .buildPtr();
+    aTubeExtBotSprite = spriteBuilder
+            .withData(tubeExtensionTiles, sizeof(tubeExtensionTiles))
+            .withSize(SIZE_32_64)
+            .withLocation(GBA_SCREEN_WIDTH + 30, GBA_SCREEN_HEIGHT + 30)
             .buildPtr();
 
     //Making background for GameScreenScene (screenblock 14 beste keuze)
@@ -104,12 +127,19 @@ void GameScreenScene::load() {
 void GameScreenScene::tick(u16 keys) {
     //TEXT FOR DEBUGGING ONLY
     //TextStream::instance().setText(std::to_string(birdY), 4, 0);
-    if (timer2 != 10) {
-        tubes.push_back(createTube(200));
+
+    tubeSpawnTimer++;
+    if (tubeSpawnTimer == 125) {
+        //Calling end of screen detection
+        tubeEndOfScreenDetection();
+
+        //Creating tubes
+        tubes.push_back(createTube(272));
         engine.get()->updateSpritesInScene();
-        timer2 = 10;
+        tubeSpawnTimer = 0;
     }
 
+    //Tube movements
     for(auto &tube : tubes){
         tube->tick();
     }
@@ -170,6 +200,16 @@ void GameScreenScene::tick(u16 keys) {
     //Print text in the upper left corner with the current score and highscore
     TextStream::instance().setText("Highscore:" + std::to_string(highscore), 0, 0);
     TextStream::instance().setText("Score:" + std::to_string(score), 1, 0);
+
+}
+
+//Copied from demo3 FoodScene::removeBulletsOffScreen()
+void GameScreenScene::tubeEndOfScreenDetection() {
+    tubes.erase(
+            std::remove_if(tubes.begin(), tubes.end(), [](std::unique_ptr<Tube> &tube) { return tube->isOffScreen(); }),
+            tubes.end());
+
+    engine.get()->updateSpritesInScene();
 }
 
 //Once the bird collides with a pipe or the ground the game over method will execute

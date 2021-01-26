@@ -20,8 +20,10 @@ private:
     std::unique_ptr<AffineSprite> bird;
 
     //Tube sprites and methods
-    std::unique_ptr<Sprite> aTubeExtensionSprite;
-    std::unique_ptr<Sprite> aTubeCapSprite;
+    std::unique_ptr<Sprite> aTubeExtTopSprite;
+    std::unique_ptr<Sprite> aTubeCapTopSprite;
+    std::unique_ptr<Sprite> aTubeExtBotSprite;
+    std::unique_ptr<Sprite> aTubeCapBotSprite;
     std::vector<std::unique_ptr<Tube>> tubes;
 
     //Create a spriteBuilder to create tubes
@@ -34,6 +36,7 @@ private:
     int scrollX, scrollY;
     int timer = 0;
     int timer2;
+    int tubeSpawnTimer = 0;
     int score = 0;
     int highscore = 0;
 public:
@@ -50,6 +53,7 @@ public:
 
     //Game related methods
     std::unique_ptr<Tube> createTube(int xPos);
+    void tubeEndOfScreenDetection();
     void gameOver();
 };
 

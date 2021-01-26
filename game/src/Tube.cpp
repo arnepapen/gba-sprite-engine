@@ -6,20 +6,37 @@
 #include <libgba-sprite-engine/gba_engine.h>
 #include <stdlib.h>
 
-void Tube::setPosition(int x, int yPosC, int yPE) {
-    xPos = x;
-    yPosCap = yPosC;
-    yPosExtension = yPE;
+//void Tube::setPosition(int x, int yPosC, int yPE) {
+//    xPos = x;
+//    yPosCap = yPosC;
+//    yPosExtension = yPE;
+//}
+
+void Tube::randomHeightTube() {
+    //Generate random Y coordinates for the middle of the tube
+    centerTubesY = rand() % (GBA_SCREEN_HEIGHT - (marginTopBottom * 2)) + marginTopBottom;
+    //Calculate coordinates with the set values for the margins and the random generated value
+    yPosCapBot = centerTubesY + (marginBetweenTubesY / 2);
+    yPosExtBot = yPosCapBot + 32;
+    yPosCapTop = centerTubesY - 32 - (marginBetweenTubesY / 2);
+    yPosExtTop = yPosCapTop - 64;
+
+    //Flip the top sprites
+    tubeCapTopSprite->flipVertically(true);
+    tubeExtTopSprite->flipVertically(true);
+    onceExecuted = true;
 }
 
 //Each engine tick move tube
 void Tube::tick() {
-    //Generate random height for the tube with a minimal of space between the tubes of 32px
-    centerTubesY = rand() % (GBA_SCREEN_HEIGHT - marginTopBottom) + (0 + marginTopBottom);
-    yPosCap = centerTubesY - (marginBetweenTubesY / 2);
-    yPosExtension = yPosCap + 32;
+    if (onceExecuted != true){
+        randomHeightTube();
+    }
+    //Move all the parts at same time
+    tubeCapTopSprite->moveTo(xPos, yPosCapTop);
+    tubeExtTopSprite->moveTo(xPos, yPosExtTop);
+    tubeCapBotSprite->moveTo(xPos, yPosCapBot);
+    tubeExtBotSprite->moveTo(xPos, yPosExtBot);
 
-    tubeCapSprite->moveTo(xPos, yPosCap);
-    tubeExtensionSprite->moveTo(xPos, yPosExtension);
     xPos -= 1;
 }
