@@ -45,9 +45,9 @@ void HomeScreenScene::load() {
             .withLocation(107,60)
             .buildPtr();
 
-    //Making background for HomeScreenScene (screenblock 14 beste keuze)
+    //Making background for HomeScreenScene (screenblock 0 beste keuze)
     bgHomeScreen = std::unique_ptr<Background>(new Background(1, background_data, sizeof(background_data), map, sizeof(map)));
-    bgHomeScreen.get()->useMapScreenBlock(14);
+    bgHomeScreen.get()->useMapScreenBlock(0);
 
     //Disable other backgrounds to prevent glitching parts
     REG_DISPCNT = DCNT_MODE0 | DCNT_OBJ | DCNT_OBJ_1D | DCNT_BG0 | DCNT_BG1;
@@ -57,7 +57,7 @@ void HomeScreenScene::load() {
 
     //Show text on the main menu to start the game by pressing the start button and change the color to black
     //TextStream::instance().setFontColor();
-    TextStream::instance().setText("PRESS START TO LAUNCH THE GAME", 4, 0);
+    TextStream::instance().setText("PRESS START TO LAUNCH THE GAME", 6, 0);
 }
 
 //do ... every tick (each engine)

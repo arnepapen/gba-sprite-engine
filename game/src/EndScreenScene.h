@@ -17,7 +17,7 @@ private:
 public:
     ////Constructor
     ////Making scene for the home screen
-    EndScreenScene(std::shared_ptr<GBAEngine> engine) : Scene(engine) {}
+    EndScreenScene(std::shared_ptr<GBAEngine> engine, int score, int highScore) : Scene(engine) {}
     //std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;
 

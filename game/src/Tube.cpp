@@ -24,6 +24,11 @@ void Tube::tick() {
     if (onceExecuted != true){
         randomHeightTube();
     }
+
+    //Flip the top sprites
+    tubeCapTopSprite->flipVertically(true);
+    tubeExtTopSprite->flipVertically(true);
+
     //Move all the parts at same time
     tubeCapTopSprite->moveTo(xPos, yPosCapTop);
     tubeExtTopSprite->moveTo(xPos, yPosExtTop);
@@ -31,8 +36,4 @@ void Tube::tick() {
     tubeExtBotSprite->moveTo(xPos, yPosExtBot);
 
     xPos -= 1;
-
-    //Flip the top sprites
-    tubeCapTopSprite->flipVertically(true);
-    tubeExtTopSprite->flipVertically(true);
 }

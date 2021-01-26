@@ -21,6 +21,9 @@
 #include "sprites/sharedPalette.h"
 #include "backgrounds/gameScreen.h"
 #include "backgrounds/bgPaletteGameScreen.h"
+#include "soundEffects/deadSound.h"
+#include "soundEffects/flapSound.h"
+#include "soundEffects/tubePassSound.h"
 
 //Create multiple tubes from the template
 std::unique_ptr<Tube> GameScreenScene::createTube(int xPos) {
@@ -138,6 +141,9 @@ void GameScreenScene::tick(u16 keys) {
         //Let tha game begin
         firstJump = true;
         holdJumpBtn = true;
+
+        //Play a soundeffect
+        //engine->enqueueSound(deadSound, sizeof(deadSound));
     }
     else if (!(keys & KEY_UP || keys & KEY_A || keys & KEY_B)){
         holdJumpBtn = false;
@@ -241,5 +247,6 @@ void GameScreenScene::scoreCounter() {
 
 //Once the bird collides with a pipe or the ground the game over method will execute
 void GameScreenScene::gameOver() {
-    //engine->transitionIntoScene(new EndScreenScene(engine), new FadeOutScene(3));
+    engine->enqueueSound(deadSound, deadSound_data);
+    //engine->transitionIntoScene(new EndScreenScene(engine, score, highScore), new FadeOutScene(3));
 }

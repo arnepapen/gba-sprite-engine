@@ -2,7 +2,7 @@ project(game)
 
 add_executable(${PROJECT_NAME}.elf
         src/main.cpp
-        src/HomeScreenScene.h src/HomeScreenScene.cpp src/sprites/birdSprite.h src/sprites/sharedPalette.h src/backgrounds/homeScreen.h src/backgrounds/bgPaletteGameScreen.h src/GameScreenScene.cpp src/GameScreenScene.h src/backgrounds/gameScreen.h src/backgrounds/bgPaletteHomeScreen.h src/sprites/tubeSprite.h src/Tube.h src/Tube.cpp src/EndScreenScene.h src/EndScreenScene.cpp)
+        src/HomeScreenScene.h src/HomeScreenScene.cpp src/sprites/birdSprite.h src/sprites/sharedPalette.h src/backgrounds/homeScreen.h src/backgrounds/bgPaletteGameScreen.h src/GameScreenScene.cpp src/GameScreenScene.h src/backgrounds/gameScreen.h src/backgrounds/bgPaletteHomeScreen.h src/sprites/tubeSprite.h src/Tube.h src/Tube.cpp src/EndScreenScene.h src/EndScreenScene.cpp src/soundEffects/deadSound.h src/soundEffects/flapSound.h src/soundEffects/tubePassSound.h)
 
 target_link_libraries(${PROJECT_NAME}.elf gba-sprite-engine)
 
