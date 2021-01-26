@@ -10,7 +10,7 @@
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
 
 #include "HomeScreenScene.h"
-#include "sprites/bird.h"
+#include "sprites/birdSprite.h"
 #include "sprites/sharedPalette.h"
 #include "backgrounds/homeScreen.h"
 #include "backgrounds/bgPaletteHomeScreen.h"

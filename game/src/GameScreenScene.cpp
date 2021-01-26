@@ -15,10 +15,24 @@
 #include <sstream>
 
 #include "GameScreenScene.h"
-#include "sprites/bird.h"
+#include "sprites/birdSprite.h"
+#include "sprites/Tube.h"
 #include "sprites/sharedPalette.h"
 #include "backgrounds/gameScreen.h"
 #include "backgrounds/bgPaletteGameScreen.h"
+
+//Create multiple tubes from the template
+std::unique_ptr<Tube> GameScreenScene::createTube(int xPos) {
+    return std::unique_ptr<Tube>(   new Tube(
+            spriteBuilder
+                .withSize(SIZE_32_32)
+                .withLocation(xPos,0)
+                .buildWithDataOf(*aTubeCapSprite.get()),
+            spriteBuilder
+                .withSize(SIZE_32_64)
+                .withLocation(xPos,0)
+                .buildWithDataOf(*aTubeExtensionSprite.get())));
+}
 
 //Getters voor de background
 std::vector<Background *> GameScreenScene::backgrounds() {
@@ -35,8 +49,15 @@ std::vector<Sprite *> GameScreenScene::sprites() {
     //Bird sprite into the vector
     sprites.push_back(bird.get());
 
-    //Tube sprite into the vector
+    //More Tube sprites into the vector
+    for (auto& tube : tubes) {
+        sprites.push_back((tube->getTubeCapSprite()));
+        sprites.push_back((tube->getTubeExtensionSprite()));
+    }
 
+    sprites.push_back(aTubeCapSprite.get());
+    sprites.push_back(aTubeExtensionSprite.get());
+    
     return sprites;
 }
 
@@ -47,6 +68,18 @@ void GameScreenScene::load() {
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(bgPaletteGameScreen, sizeof(bgPaletteGameScreen)));
 
     //Making sprites for GameScreenScene
+    aTubeCapSprite = spriteBuilder
+            .withData(tubeCapTiles, sizeof(tubeCapTiles))
+            .withSize(SIZE_32_32)
+            .withLocation(GBA_SCREEN_WIDTH + 30, GBA_SCREEN_HEIGHT + 30)
+            .buildPtr();
+
+    aTubeExtensionSprite = spriteBuilder
+            .withData(tubeExtensionTiles, sizeof(tubeExtensionTiles))
+            .withSize(SIZE_32_64)
+            .withLocation(GBA_SCREEN_WIDTH + 30, GBA_SCREEN_HEIGHT + 30)
+            .buildPtr();
+
     SpriteBuilder<AffineSprite> affineBuilder;
     bird = affineBuilder
             .withData(birdTiles, sizeof(birdTiles))
@@ -71,6 +104,15 @@ void GameScreenScene::load() {
 void GameScreenScene::tick(u16 keys) {
     //TEXT FOR DEBUGGING ONLY
     //TextStream::instance().setText(std::to_string(birdY), 4, 0);
+    if (timer2 != 10) {
+        tubes.push_back(createTube(200));
+        engine.get()->updateSpritesInScene();
+        timer2 = 10;
+    }
+
+    for(auto &tube : tubes){
+        tube->tick();
+    }
 
 
     //Reduce background scrolling speed by 2 and reset self made timer
