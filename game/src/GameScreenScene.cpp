@@ -21,6 +21,7 @@
 #include "sprites/sharedPalette.h"
 #include "backgrounds/gameScreen.h"
 #include "backgrounds/bgPaletteGameScreen.h"
+#include "EndScreenScene.h"
 #include "soundEffects/deadSound.h"
 #include "soundEffects/flapSound.h"
 #include "soundEffects/tubePassSound.h"
@@ -143,7 +144,7 @@ void GameScreenScene::tick(u16 keys) {
         holdJumpBtn = true;
 
         //Play a soundeffect
-        //engine->enqueueSound(deadSound, sizeof(deadSound));
+        //engine->enqueueSound(flapSound, flapSound_data);
     }
     else if (!(keys & KEY_UP || keys & KEY_A || keys & KEY_B)){
         holdJumpBtn = false;
@@ -222,10 +223,12 @@ void GameScreenScene::collisionDetection() {
         if (bird->collidesWith(*tube->getTubeExtTopSprite()) ||
             bird->collidesWith(*tube->getTubeCapTopSprite()) ||
             bird->collidesWith(*tube->getTubeExtBotSprite()) ||
-            bird->collidesWith(*tube->getTubeCapBotSprite()) ||
-            bird->getY() >= GBA_SCREEN_HEIGHT - bird->getHeight()) {
+            bird->collidesWith(*tube->getTubeCapBotSprite())) {
             gameOver();
         }
+    }
+    if (bird->getY() >= GBA_SCREEN_HEIGHT - bird->getHeight()){
+        gameOver();
     }
 }
 
@@ -234,6 +237,9 @@ void GameScreenScene::scoreCounter() {
     for (auto& tube : tubes) {
         if (bird->getX() == tube->getX()) {
             score++;
+
+            //Play a sound effect when score a point
+            //engine->enqueueSound(tubePassSound, tubePassSound_data);
         }
     }
     if (score >= highScore) {
@@ -247,6 +253,7 @@ void GameScreenScene::scoreCounter() {
 
 //Once the bird collides with a pipe or the ground the game over method will execute
 void GameScreenScene::gameOver() {
+    //Play a soundeffect when dead
     engine->enqueueSound(deadSound, deadSound_data);
-    //engine->transitionIntoScene(new EndScreenScene(engine, score, highScore), new FadeOutScene(3));
+    engine->transitionIntoScene(new EndScreenScene(engine, score, highScore), new FadeOutScene(10));
 }

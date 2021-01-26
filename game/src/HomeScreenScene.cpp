@@ -45,7 +45,7 @@ void HomeScreenScene::load() {
             .withLocation(107,60)
             .buildPtr();
 
-    //Making background for HomeScreenScene (screenblock 0 beste keuze)
+    //Making background for HomeScreenScene (screenblock 0 best choice)
     bgHomeScreen = std::unique_ptr<Background>(new Background(1, background_data, sizeof(background_data), map, sizeof(map)));
     bgHomeScreen.get()->useMapScreenBlock(0);
 

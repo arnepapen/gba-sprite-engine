@@ -27,7 +27,7 @@ private:
     std::vector<std::unique_ptr<Tube>> tubes;
 
     //Create a spriteBuilder to create tubes
-    SpriteBuilder <Sprite> spriteBuilder;
+    SpriteBuilder<Sprite> spriteBuilder;
 
     //Used variables
     bool holdJumpBtn = false;
@@ -35,7 +35,6 @@ private:
     bool firstJump = false;
     int scrollX, scrollY;
     int timer = 0;
-    int timer2;
     int tubeSpawnTimer = 0;
     int score = 0;
     int highScore;

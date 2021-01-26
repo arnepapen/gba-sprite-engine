@@ -7,6 +7,7 @@
 #include <libgba-sprite-engine/gba/tonc_memdef.h>
 #include <libgba-sprite-engine/gba_engine.h>
 #include <libgba-sprite-engine/effects/fade_out_scene.h>
+#include <libgba-sprite-engine/sprites/sprite.h>
 
 #include "sprites/birdSprite.h"
 #include "backgrounds/homeScreen.h"
@@ -14,6 +15,7 @@
 #include "sprites/sharedPalette.h"
 //#include "GameScreenScene.h"
 #include "EndScreenScene.h"
+#include "HomeScreenScene.h"
 
 //Getters background
 std::vector<Background *> EndScreenScene::backgrounds() {
@@ -22,31 +24,19 @@ std::vector<Background *> EndScreenScene::backgrounds() {
     };
 }
 
-////Getters voor de sprites
-//std::vector<Sprite *> EndScreenScene::sprites() {
-//    return {
-//            bird.get()
-//    };
-//}
+//Getters voor de sprites
+std::vector<Sprite *> EndScreenScene::sprites() {
+    return {};
+}
 
 //Loading EndScreenScene
 void EndScreenScene::load() {
     //Set color palettes for Sprites and backgrounds
-    foregroundPalette = std::unique_ptr<ForegroundPaletteManager>(new ForegroundPaletteManager(sharedPalette, sizeof(sharedPalette)));
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(bgPaletteHomeScreen, sizeof(bgPaletteHomeScreen)));
 
-//    //Making sprites for HomeScreenScene
-//    SpriteBuilder<Sprite> builder;
-//    bird = builder
-//            .withData(birdTiles, sizeof(birdTiles))
-//            .withSize(SIZE_16_16)
-//            .withAnimated(4, 8)
-//            .withLocation(107,60)
-//            .buildPtr();
-
-    //Making background for HomeScreenScene (screenblock 14 beste keuze)
+    //Making background for EndScreenScene (screenblock 0 best choice)
     bgEndScreen = std::unique_ptr<Background>(new Background(1, background_data, sizeof(background_data), map, sizeof(map)));
-    bgEndScreen.get()->useMapScreenBlock(14);
+    bgEndScreen.get()->useMapScreenBlock(0);
 
     //Disable other backgrounds to prevent glitching parts
     REG_DISPCNT = DCNT_MODE0 | DCNT_OBJ | DCNT_OBJ_1D | DCNT_BG0 | DCNT_BG1;
@@ -55,14 +45,18 @@ void EndScreenScene::load() {
     engine.get()->enableText();
 
     //Show the score and the highscore
-    //TextStream::instance().setFontColor();
-    TextStream::instance().setText("PRESS START TO LAUNCH THE GAME", 4, 0);
+    TextStream::instance().setText("GAME OVER", 5, 9);
+    TextStream::instance().setText("PRESS START TO LAUNCH THE GAME", 6, 0);
+    TextStream::instance().setText("Your score:" + std::to_string(endScore), 8, 0);
+    TextStream::instance().setText("Your highscore: " + std::to_string(endHighScore), 9, 0);
+
+    bgEndScreen.get()->scroll(0, 0);
 }
 
 //do ... every tick (each engine)
 void EndScreenScene::tick(u16 keys) {
     //If the start button is pressed, going to the gamescreen again
     if(keys & KEY_START) {
-        //engine->transitionIntoScene(new GameScreenScene(engine), new FadeOutScene(3));
+        engine->transitionIntoScene(new HomeScreenScene(engine), new FadeOutScene(3));
     }
 }

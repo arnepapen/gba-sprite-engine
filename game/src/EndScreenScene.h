@@ -11,14 +11,16 @@
 
 class EndScreenScene : public Scene {
 private:
-    ////Object declaration background on the homeScreenScene
+    ////Object declaration background on the endScreenScene
     std::unique_ptr<Background> bgEndScreen;
 
+    int endScore;
+    int endHighScore;
 public:
     ////Constructor
-    ////Making scene for the home screen
-    EndScreenScene(std::shared_ptr<GBAEngine> engine, int score, int highScore) : Scene(engine) {}
-    //std::vector<Sprite *> sprites() override;
+    ////Making scene for the end screen
+    EndScreenScene(std::shared_ptr<GBAEngine> engine, int score, int highScore) : Scene(engine) {endScore = score; endHighScore = highScore;}
+    std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;
 
     ////Default
