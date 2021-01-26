@@ -26,7 +26,8 @@ public:
     int yPosCapBot;
     int yPosExtTop;
     int yPosExtBot;
-    int marginBetweenTubesY = 40;
+    //45 = perfect difficulty
+    int marginBetweenTubesY = 45;
     //50 = perfect to avoid spaces between the roof or the ground
     int marginTopBottom = 50;
     int centerTubesY;

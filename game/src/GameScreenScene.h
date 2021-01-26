@@ -54,6 +54,7 @@ public:
     //Game related methods
     std::unique_ptr<Tube> createTube(int xPos);
     void tubeEndOfScreenDetection();
+    void collisionDetection();
     void gameOver();
 };
 

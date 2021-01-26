@@ -201,15 +201,27 @@ void GameScreenScene::tick(u16 keys) {
     TextStream::instance().setText("Highscore:" + std::to_string(highscore), 0, 0);
     TextStream::instance().setText("Score:" + std::to_string(score), 1, 0);
 
+    //Other related methods
+    collisionDetection();
 }
 
-//Copied from demo3 FoodScene::removeBulletsOffScreen()
+//Removing off screen tubes from the sprite vector - Copied from demo3 FoodScene::removeBulletsOffScreen()
 void GameScreenScene::tubeEndOfScreenDetection() {
     tubes.erase(
             std::remove_if(tubes.begin(), tubes.end(), [](std::unique_ptr<Tube> &tube) { return tube->isOffScreen(); }),
             tubes.end());
+}
 
-    engine.get()->updateSpritesInScene();
+//End the game if a collision with the bird and a tube or the ground is detected
+void GameScreenScene::collisionDetection() {
+    for (auto& tube : tubes) {
+        if (bird->collidesWith(*tube->getTubeExtTopSprite()) ||
+            bird->collidesWith(*tube->getTubeCapTopSprite()) ||
+            bird->collidesWith(*tube->getTubeExtBotSprite()) ||
+            bird->collidesWith(*tube->getTubeCapBotSprite())) {
+
+        }
+    }
 }
 
 //Once the bird collides with a pipe or the ground the game over method will execute
