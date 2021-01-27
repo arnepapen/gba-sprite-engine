@@ -2,8 +2,6 @@
 // Created by Arne Papen on 11/01/2021.
 //
 
-
-
 #include <vector>
 #include <libgba-sprite-engine/sprites/affine_sprite.h>
 #include <libgba-sprite-engine/sprites/sprite_builder.h>
@@ -26,7 +24,7 @@
 #include "soundEffects/flapSound.h"
 #include "soundEffects/tubePassSound.h"
 
-//Create multiple tubes from the template
+//Create multiple tube parts from the tube template (each tube has a cap and an extension)
 std::unique_ptr<Tube> GameScreenScene::createTube(int xPos) {
     return std::unique_ptr<Tube>(   new Tube(
             spriteBuilder
@@ -60,7 +58,7 @@ std::vector<Sprite *> GameScreenScene::sprites() {
     //Vector with all sprites inside
     std::vector<Sprite*> sprites;
 
-    //More Tube sprites into the vector
+    //Tube sprites into the vector
     for (auto& tube : tubes) {
         sprites.push_back((tube->getTubeCapTopSprite()));
         sprites.push_back((tube->getTubeExtTopSprite()));
@@ -116,7 +114,7 @@ void GameScreenScene::load() {
             .withLocation(GBA_SCREEN_WIDTH + 30, GBA_SCREEN_HEIGHT + 30)
             .buildPtr();
 
-    //Making background for GameScreenScene (screenblock 14 beste keuze)
+    //Making background for GameScreenScene (screenblock 14 best choice)
     bgGameScreen = std::unique_ptr<Background>(new Background(1, background_data, sizeof(background_data), map, sizeof(map)));
     bgGameScreen.get()->useMapScreenBlock(14);
 
@@ -129,10 +127,6 @@ void GameScreenScene::load() {
 
 //do ... every tick (each engine)
 void GameScreenScene::tick(u16 keys) {
-    //TEXT FOR DEBUGGING ONLY
-    //TextStream::instance().setText(std::to_string(birdY), 4, 0);
-
-
     //Pressing A, B or arrow up let's the bird jump only ONCE, otherwise 'gravity' will pull down the bird
     if((keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == false){
         //(Re)start timer
@@ -144,7 +138,7 @@ void GameScreenScene::tick(u16 keys) {
         holdJumpBtn = true;
 
         //Play a soundeffect
-        //engine->enqueueSound(flapSound, flapSound_data);
+        engine->enqueueSound(flapSound, flapSound_data);
     }
     else if (!(keys & KEY_UP || keys & KEY_A || keys & KEY_B)){
         holdJumpBtn = false;
@@ -169,7 +163,6 @@ void GameScreenScene::tick(u16 keys) {
     }
 
 
-
     //The first jump let the game begin
     if(firstJump == true) {
         //'Gravity' is created by a certain Y velocity upwards that is slowed down by a factor of the time that the jump key is pressed
@@ -177,14 +170,9 @@ void GameScreenScene::tick(u16 keys) {
         birdY = -2 + (engine->getTimer()->getTotalMsecs() / 110);
         bird->setVelocity(0,birdY);
 
-
-        //Reduce background scrolling speed by 2 and reset self made timer
-        timer++;
-        if(timer >= 2){
-            scrollX += 1;
-            bgGameScreen.get()->scroll(scrollX, scrollY);
-            timer = 0;
-        }
+        //Background scrolling
+        scrollX += 1;
+        bgGameScreen.get()->scroll(scrollX, scrollY);
 
         //Easy implemented method to spawn tubes at the same interval
         tubeSpawnTimer++;
@@ -198,7 +186,7 @@ void GameScreenScene::tick(u16 keys) {
             tubeSpawnTimer = 0;
         }
 
-        //Tube movements
+        //Tube movements from right to left
         for(auto &tube : tubes){
             tube->tick();
         }
@@ -225,6 +213,7 @@ void GameScreenScene::collisionDetection() {
             bird->collidesWith(*tube->getTubeExtBotSprite()) ||
             bird->collidesWith(*tube->getTubeCapBotSprite())) {
             gameOver();
+            break;
         }
     }
     if (bird->getY() >= GBA_SCREEN_HEIGHT - bird->getHeight()){
@@ -239,7 +228,7 @@ void GameScreenScene::scoreCounter() {
             score++;
 
             //Play a sound effect when score a point
-            //engine->enqueueSound(tubePassSound, tubePassSound_data);
+            engine->enqueueSound(tubePassSound, tubePassSound_data);
         }
     }
     if (score >= highScore) {
@@ -251,7 +240,7 @@ void GameScreenScene::scoreCounter() {
     TextStream::instance().setText("Score:" + std::to_string(score), 1, 0);
 }
 
-//Once the bird collides with a pipe or the ground the game over method will execute
+//Once the bird collides with a tube or the ground the game over method will execute and go to the final scene
 void GameScreenScene::gameOver() {
     //Play a soundeffect when dead
     engine->enqueueSound(deadSound, deadSound_data);

@@ -9,7 +9,7 @@
 
 class Tube {
 private:
-    //Ext stands for extension, bot for bottom
+    //Ext stands for extension, bot for the tube at the bottom, top for the tube at the top, cap for cap of the tube
     std::unique_ptr<Sprite> tubeCapTopSprite;
     std::unique_ptr<Sprite> tubeExtTopSprite;
     std::unique_ptr<Sprite> tubeCapBotSprite;

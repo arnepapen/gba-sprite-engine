@@ -13,7 +13,6 @@
 #include "backgrounds/homeScreen.h"
 #include "backgrounds/bgPaletteHomeScreen.h"
 #include "sprites/sharedPalette.h"
-//#include "GameScreenScene.h"
 #include "EndScreenScene.h"
 #include "HomeScreenScene.h"
 
@@ -24,14 +23,14 @@ std::vector<Background *> EndScreenScene::backgrounds() {
     };
 }
 
-//Getters voor de sprites
+//Getters sprites
 std::vector<Sprite *> EndScreenScene::sprites() {
     return {};
 }
 
 //Loading EndScreenScene
 void EndScreenScene::load() {
-    //Set color palettes for Sprites and backgrounds
+    //Set color palettes backgrounds
     backgroundPalette = std::unique_ptr<BackgroundPaletteManager>(new BackgroundPaletteManager(bgPaletteHomeScreen, sizeof(bgPaletteHomeScreen)));
 
     //Making background for EndScreenScene (screenblock 0 best choice)
@@ -45,11 +44,12 @@ void EndScreenScene::load() {
     engine.get()->enableText();
 
     //Show the score and the highscore
-    TextStream::instance().setText("GAME OVER", 5, 9);
+    TextStream::instance().setText("GAME OVER", 5, 10);
     TextStream::instance().setText("PRESS START TO LAUNCH THE GAME", 6, 0);
     TextStream::instance().setText("Your score:" + std::to_string(endScore), 8, 0);
     TextStream::instance().setText("Your highscore: " + std::to_string(endHighScore), 9, 0);
 
+    //Ensures that the background in in the middle of the screen
     bgEndScreen.get()->scroll(0, 0);
 }
 

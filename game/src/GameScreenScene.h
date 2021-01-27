@@ -16,7 +16,7 @@ private:
     //Object declaration background on the GameScreenScene
     std::unique_ptr<Background> bgGameScreen;
 
-    //Object declaration sprites on the GameScreenScene
+    //Object declaration of one birdsprite on the GameScreenScene
     std::unique_ptr<AffineSprite> bird;
 
     //Tube sprites and methods
@@ -31,22 +31,21 @@ private:
 
     //Used variables
     bool holdJumpBtn = false;
-    int birdX, birdY;
     bool firstJump = false;
+    int birdY;
     int scrollX, scrollY;
-    int timer = 0;
     int tubeSpawnTimer = 0;
     int score = 0;
     int highScore;
 public:
-    //Constructor
+    //Constructor and making scene
     GameScreenScene(std::shared_ptr<GBAEngine> engine) : Scene(engine) {}
 
     //Getters
     std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;
 
-    //Default
+    //Default methods
     void load() override;
     void tick(u16 keys) override;
 

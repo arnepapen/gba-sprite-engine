@@ -21,4 +21,4 @@ Enjoy it!
 - Tubes passing in front of the score & highscore
 - Relaunching the game after a game over, not always working very well, a reset always works
 - Highscore & Score are not displayed after a game over
-- SoundEffects are distorted
+- Sound effects are not played simultaneously (therefore the 'jump' effect is not always played if a tube is passed)

@@ -11,19 +11,18 @@
 
 class HomeScreenScene : public Scene {
 private:
-    ////Object declaration background on the homeScreenScene
+    //Object declaration background on the homeScreenScene
     std::unique_ptr<Background> bgHomeScreen;
 
-    ////Object declaration sprites on the homeScreenScene
+    //Object declaration sprites on the homeScreenScene
     std::unique_ptr<Sprite> bird;
 public:
-    ////Constructor
-    ////Making scene for the home screen
+    //Constructor and making scene for the home screen
     HomeScreenScene(std::shared_ptr<GBAEngine> engine) : Scene(engine) {}
     std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;
 
-    ////Default
+    //Default methods
     void load() override;
     void tick(u16 keys) override;
 };

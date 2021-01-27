@@ -55,8 +55,7 @@ void HomeScreenScene::load() {
     //Enable text function in the scene
     engine.get()->enableText();
 
-    //Show text on the main menu to start the game by pressing the start button and change the color to black
-    //TextStream::instance().setFontColor();
+    //Show text on the main menu to start the game by pressing the start button
     TextStream::instance().setText("PRESS START TO LAUNCH THE GAME", 6, 0);
 }
 
