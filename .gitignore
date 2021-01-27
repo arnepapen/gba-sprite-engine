@@ -125,3 +125,7 @@ CTestTestfile.cmake
 
 #VisualStudio code
 .vscode
+
+#Domain model
+game/Domein_model_V1.drawio
+game/Domein_model_V1.png
