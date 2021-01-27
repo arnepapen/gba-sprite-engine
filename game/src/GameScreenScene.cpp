@@ -127,7 +127,7 @@ void GameScreenScene::load() {
 
 //do ... every tick (each engine)
 void GameScreenScene::tick(u16 keys) {
-    //Pressing A, B or arrow up let's the bird jump only ONCE, otherwise 'gravity' will pull down the bird
+    //Pressing A, B or arrow up let the bird jump only ONCE, otherwise 'gravity' will pull down the bird
     if((keys & KEY_UP || keys & KEY_A || keys & KEY_B) && holdJumpBtn == false){
         //(Re)start timer
         engine->getTimer()->reset();

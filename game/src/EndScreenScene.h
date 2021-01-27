@@ -19,6 +19,7 @@ private:
     int endHighScore;
 public:
     //Constructor and making scene for the end screen
+    //Tried to inherit the score and highscore from the gamescreen (not properly working) - copied from https://github.com/Bram-Pl/Crossy_Road_GBA (Arne Niesten & Bram Plessers)
     EndScreenScene(std::shared_ptr<GBAEngine> engine, int score, int highScore) : Scene(engine) {endScore = score; endHighScore = highScore;}
     std::vector<Sprite *> sprites() override;
     std::vector<Background *> backgrounds() override;
