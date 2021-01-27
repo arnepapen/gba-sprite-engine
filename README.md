@@ -14,6 +14,7 @@ Flappy Bird is not yet tested on the real GBA hardware, I have used the [mGBA](h
 
 The source code of the Flappy Bird game can be found in `game/src/`.
 All of the used images can be found in `game/img/`.
+The used sound effects are located in `game/sound/`.
 
 Enjoy it!
 
